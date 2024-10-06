@@ -1,0 +1,208 @@
+basePath: /api/v1
+definitions:
+  dtos.ErrorResponse:
+    properties:
+      error:
+        example: Something went wrong
+        type: string
+    type: object
+  dtos.Post:
+    properties:
+      author:
+        example: John Doe
+        type: string
+      body:
+        example: This is the body of the first post.
+        type: string
+      draft:
+        example: false
+        type: boolean
+      likes:
+        example: 100
+        type: integer
+      title:
+        example: First Post
+        type: string
+    required:
+    - author
+    - body
+    - title
+    type: object
+  dtos.PostResponse:
+    properties:
+      author:
+        example: John Doe
+        type: string
+      body:
+        example: This is the body of the first post.
+        type: string
+      created_at:
+        example: "2024-10-06T10:32:36Z"
+        type: string
+      draft:
+        example: false
+        type: boolean
+      id:
+        example: 1
+        type: integer
+      likes:
+        example: 100
+        type: integer
+      title:
+        example: First Post
+        type: string
+      updated_at:
+        example: "2024-10-06T10:32:36Z"
+        type: string
+    type: object
+  dtos.SuccessResponse:
+    properties:
+      data: {}
+    type: object
+host: localhost:3010
+info:
+  contact: {}
+  description: Esta é uma API de exemplo usando Gin e Swagger
+  title: Exemplo API com Gin
+  version: "1.0"
+paths:
+  /posts:
+    get:
+      description: Recupera todos os posts disponíveis
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dtos.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dtos.PostResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: Retorna todos os posts
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      description: Cria um novo post a partir dos dados fornecidos no body
+      parameters:
+      - description: Post Data
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.Post'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dtos.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dtos.PostResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: Cria um post
+      tags:
+      - posts
+  /posts/{id}:
+    delete:
+      description: Remove um post baseado no ID fornecido
+      parameters:
+      - description: ID do Post
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Post has been deleted successfully
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: Exclui um post
+      tags:
+      - posts
+    get:
+      description: Recupera um post pelo ID fornecido
+      parameters:
+      - description: ID do Post
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dtos.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dtos.PostResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: Retorna um post
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      description: Atualiza um post com base no ID e dados fornecidos
+      parameters:
+      - description: ID do Post
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Post Data
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.Post'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dtos.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dtos.PostResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dtos.ErrorResponse'
+      summary: Atualiza um post
+      tags:
+      - posts
+swagger: "2.0"
